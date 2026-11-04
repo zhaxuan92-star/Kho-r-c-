@@ -1,0 +1,62 @@
+name: Update music manifest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.mp3'
+      - '.github/workflows/update-music-manifest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout music library
+        uses: actions/checkout@v4
+      - name: Generate manifest from MP3 files only
+        env:
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const repo = process.env.REPOSITORY;
+          const branch = process.env.BRANCH || 'main';
+          const files = fs.readdirSync('.')
+            .filter(name => name.toLowerCase().endsWith('.mp3') && fs.statSync(name).isFile())
+            .sort((a,b) => a.localeCompare(b));
+          const tracks = files.map((file, index) => {
+            const title = path.basename(file, path.extname(file));
+            const encoded = encodeURIComponent(file).replace(/%2F/g, '/');
+            return {
+              id: 'music-' + String(index + 1).padStart(3, '0'),
+              title,
+              artist: 'Unknown',
+              file,
+              url: 'https://raw.githubusercontent.com/' + repo + '/' + branch + '/' + encoded,
+              approved: true
+            };
+          });
+          fs.writeFileSync('tracks.json', JSON.stringify({
+            version: 2,
+            updatedAt: new Date().toISOString(),
+            tracks
+          }, null, 2) + '\n');
+          console.log('Indexed ' + tracks.length + ' MP3 files.');
+          NODE
+      - name: Commit updated manifest
+        run: |
+          if git diff --quiet -- tracks.json; then
+            echo "Manifest already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tracks.json
+          git commit -m "chore: sync MP3 music manifest"
+          git push
