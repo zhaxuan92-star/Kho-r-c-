@@ -1,0 +1,38 @@
+name: Validate MP3-only contributions
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  mp3-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check changed file extensions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              core.info('Manual run: no pull request to validate.');
+              return;
+            }
+            const files = await github.paginate(
+              github.rest.pulls.listFiles,
+              { owner: context.repo.owner, repo: context.repo.repo, pull_number: pr.number, per_page: 100 }
+            );
+            const allowed = new Set(['.mp3']);
+            const invalid = files
+              .filter(f => f.status !== 'removed')
+              .map(f => f.filename)
+              .filter(name => !allowed.has(name.slice(name.lastIndexOf('.')).toLowerCase()));
+            if (invalid.length) {
+              core.setFailed('Only .mp3 files are allowed in music submissions. Rejected: ' + invalid.join(', '));
+            } else {
+              core.info('All submitted files are MP3.');
+            }
