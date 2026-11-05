@@ -1,11 +1,13 @@
 name: Sync MP3 music library
 
 on:
+  schedule:
+    - cron: "*/10 * * * *"
   push:
     branches:
       - main
     paths:
-      - "*.mp3"
+      - "**/*.mp3"
       - ".github/workflows/sync-music-library.yml"
   workflow_dispatch:
 
@@ -19,13 +21,14 @@ concurrency:
 jobs:
   generate-manifest:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout music repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Generate tracks.json from root MP3 files
+      - name: Scan repository and generate tracks.json
         shell: python
         run: |
           import json
@@ -37,23 +40,28 @@ jobs:
           branch = "main"
           tracks = []
           files = sorted(
-              (p for p in Path(".").iterdir() if p.is_file() and p.suffix.lower() == ".mp3"),
-              key=lambda p: p.name.casefold()
+              (
+                  p for p in Path(".").rglob("*")
+                  if p.is_file()
+                  and p.suffix.lower() == ".mp3"
+                  and ".git" not in p.parts
+              ),
+              key=lambda p: p.as_posix().casefold()
           )
 
           for index, path in enumerate(files, start=1):
-              filename = path.name
+              relative_path = path.as_posix().removeprefix("./")
               tracks.append({
                   "id": f"music-{index:04d}",
                   "title": path.stem,
                   "artist": "Unknown",
-                  "file": filename,
-                  "url": f"https://raw.githubusercontent.com/{repo}/{branch}/{quote(filename, safe='')}",
+                  "file": relative_path,
+                  "url": f"https://raw.githubusercontent.com/{repo}/{branch}/{quote(relative_path, safe='/')}",
                   "approved": True
               })
 
           manifest = {
-              "version": 3,
+              "version": 4,
               "updatedAt": datetime.now(timezone.utc).isoformat(),
               "source": f"https://github.com/{repo}",
               "tracks": tracks
