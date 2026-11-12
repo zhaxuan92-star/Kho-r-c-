@@ -64,6 +64,8 @@ jobs:
               "version": 4,
               "updatedAt": datetime.now(timezone.utc).isoformat(),
               "source": f"https://github.com/{repo}",
+              "rightsNotice": f"https://github.com/{repo}/blob/{branch}/VZCMUSICO-COPYRIGHT.md",
+              "approvalMeaning": "approved means included in the playback catalogue only; it is not copyright clearance",
               "tracks": tracks
           }
           Path("tracks.json").write_text(
