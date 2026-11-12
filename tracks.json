@@ -1,7 +1,9 @@
 {
   "version": 4,
-  "updatedAt": "2026-11-12T03:45:11.527300+00:00",
+  "updatedAt": "2026-11-12T05:19:09.829474+00:00",
   "source": "https://github.com/zhaxuan92-star/Kho-r-c-",
+  "rightsNotice": "https://github.com/zhaxuan92-star/Kho-r-c-/blob/main/VZCMUSICO-COPYRIGHT.md",
+  "approvalMeaning": "approved means included in the playback catalogue only; it is not copyright clearance",
   "tracks": [
     {
       "id": "music-0001",
@@ -9,8 +11,7 @@
       "artist": "Unknown",
       "file": "CRUSHTEKK (Slowed) - silver seraph.mp3",
       "url": "https://raw.githubusercontent.com/zhaxuan92-star/Kho-r-c-/main/CRUSHTEKK%20%28Slowed%29%20-%20silver%20seraph.mp3",
-      "approved": true,
-      "rightsStatus": "unverified"
+      "approved": true
     },
     {
       "id": "music-0002",
@@ -18,8 +19,7 @@
       "artist": "Unknown",
       "file": "Tinh Vệ (精卫) - 海南DJ茂 Remix __ Nhạc Remix Hot TikTok 2026 - Hot TikTok Douyin 2026 [Nozl9J-Kmz4].mp3",
       "url": "https://raw.githubusercontent.com/zhaxuan92-star/Kho-r-c-/main/Tinh%20V%E1%BB%87%20%28%E7%B2%BE%E5%8D%AB%29%20-%20%E6%B5%B7%E5%8D%97DJ%E8%8C%82%20Remix%20__%20Nh%E1%BA%A1c%20Remix%20Hot%20TikTok%202026%20-%20Hot%20TikTok%20Douyin%202026%20%5BNozl9J-Kmz4%5D.mp3",
-      "approved": true,
-      "rightsStatus": "unverified"
+      "approved": true
     },
     {
       "id": "music-0003",
@@ -27,8 +27,7 @@
       "artist": "Unknown",
       "file": "Từ cửu môn hồi ức x Mạc Vấn Quy Kỳ.mp3",
       "url": "https://raw.githubusercontent.com/zhaxuan92-star/Kho-r-c-/main/T%E1%BB%AB%20c%E1%BB%ADu%20m%C3%B4n%20h%E1%BB%93i%20%E1%BB%A9c%20x%20M%E1%BA%A1c%20V%E1%BA%A5n%20Quy%20K%E1%BB%B3.mp3",
-      "approved": true,
-      "rightsStatus": "unverified"
+      "approved": true
     },
     {
       "id": "music-0004",
@@ -36,10 +35,7 @@
       "artist": "Unknown",
       "file": "VŨ TRỤ CÓ ANH JUMPSTYLE (Super Slowed + Reverb) Gojo edit.mp3",
       "url": "https://raw.githubusercontent.com/zhaxuan92-star/Kho-r-c-/main/V%C5%A8%20TR%E1%BB%A4%20C%C3%93%20ANH%20JUMPSTYLE%20%28Super%20Slowed%20%2B%20Reverb%29%20Gojo%20edit.mp3",
-      "approved": true,
-      "rightsStatus": "unverified"
+      "approved": true
     }
-  ],
-  "rightsNotice": "https://github.com/zhaxuan92-star/Kho-r-c-/blob/main/VZCMUSICO-COPYRIGHT.md",
-  "approvalMeaning": "approved means included in the playback catalogue only; it is not copyright clearance"
+  ]
 }
