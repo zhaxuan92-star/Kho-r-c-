@@ -1,3 +1,4 @@
+# Single authoritative manifest workflow. Scans root and subfolders every 10 minutes.
 name: Sync MP3 music library
 
 on:
