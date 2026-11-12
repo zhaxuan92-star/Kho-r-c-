@@ -4,59 +4,74 @@ on:
   push:
     branches: [main]
     paths:
-      - '*.mp3'
+      - '**/*.mp3'
       - '.github/workflows/update-music-manifest.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: music-library-main
+  cancel-in-progress: false
+
 jobs:
   build-manifest:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout music library
         uses: actions/checkout@v4
-      - name: Generate manifest from MP3 files only
+      - name: Generate version 4 manifest with rights metadata
         env:
           REPOSITORY: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
         run: |
-          node <<'NODE'
-          const fs = require('fs');
-          const path = require('path');
-          const repo = process.env.REPOSITORY;
-          const branch = process.env.BRANCH || 'main';
-          const files = fs.readdirSync('.')
-            .filter(name => name.toLowerCase().endsWith('.mp3') && fs.statSync(name).isFile())
-            .sort((a,b) => a.localeCompare(b));
-          const tracks = files.map((file, index) => {
-            const title = path.basename(file, path.extname(file));
-            const encoded = encodeURIComponent(file).replace(/%2F/g, '/');
-            return {
-              id: 'music-' + String(index + 1).padStart(3, '0'),
-              title,
-              artist: 'Unknown',
-              file,
-              url: 'https://raw.githubusercontent.com/' + repo + '/' + branch + '/' + encoded,
-              approved: true
-            };
-          });
-          fs.writeFileSync('tracks.json', JSON.stringify({
-            version: 2,
-            updatedAt: new Date().toISOString(),
-            tracks
-          }, null, 2) + '\n');
-          console.log('Indexed ' + tracks.length + ' MP3 files.');
-          NODE
+          python <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.parse import quote
+          from datetime import datetime, timezone
+
+          repo = os.environ["REPOSITORY"]
+          branch = os.environ.get("BRANCH", "main")
+          files = sorted(
+              (p for p in Path(".").rglob("*")
+               if p.is_file() and p.suffix.lower() == ".mp3" and ".git" not in p.parts),
+              key=lambda p: p.as_posix().casefold()
+          )
+          tracks = []
+          for index, path in enumerate(files, start=1):
+              rel = path.as_posix()
+              tracks.append({
+                  "id": f"music-{index:04d}",
+                  "title": path.stem,
+                  "artist": "Unknown",
+                  "file": rel,
+                  "url": f"https://raw.githubusercontent.com/{repo}/{branch}/{quote(rel, safe='/')}",
+                  "approved": True,
+                  "rightsStatus": "unverified"
+              })
+          manifest = {
+              "version": 4,
+              "updatedAt": datetime.now(timezone.utc).isoformat(),
+              "source": f"https://github.com/{repo}",
+              "rightsNotice": f"https://github.com/{repo}/blob/{branch}/VZCMUSICO-COPYRIGHT.md",
+              "approvalMeaning": "approved means included in the playback catalogue only; it is not copyright clearance",
+              "tracks": tracks
+          }
+          Path("tracks.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(f"Indexed {len(tracks)} MP3 files.")
+          PY
       - name: Commit updated manifest
         run: |
-          if git diff --quiet -- tracks.json; then
-            echo "Manifest already up to date."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add tracks.json
-          git commit -m "chore: sync MP3 music manifest"
+          if git diff --cached --quiet; then
+            echo "Manifest already up to date."
+            exit 0
+          fi
+          git commit -m "chore(music): sync MP3 manifest and rights metadata"
           git push
