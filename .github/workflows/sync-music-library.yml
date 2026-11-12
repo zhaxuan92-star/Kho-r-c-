@@ -1,4 +1,4 @@
-# Single authoritative manifest workflow. Scans root and subfolders every 10 minutes.
+# Single authoritative manifest workflow. Scans root and subfolders every 10 minutes; records rights status for every track.
 name: Sync MP3 music library
 
 on:
@@ -58,7 +58,8 @@ jobs:
                   "artist": "Unknown",
                   "file": relative_path,
                   "url": f"https://raw.githubusercontent.com/{repo}/{branch}/{quote(relative_path, safe='/')}",
-                  "approved": True
+                  "approved": True,
+                  "rightsStatus": "unverified"
               })
 
           manifest = {
