@@ -5,6 +5,7 @@
 **Library repository:** https://github.com/zhaxuan92-star/Kho-r-c-  
 **Connected product:** World Simulator OSM — https://world-simulator-osm.vzcapps.vercel.app  
 **Brand and rights information:** https://vzc-copyright-center.vercel.app/copyright/  
+**Music Hub:** https://vzcmusico.vercel.app/  
 **Last updated:** 12 November 2026
 
 ## 1. Scope of this notice
@@ -36,7 +37,11 @@ Please include:
 
 Requests are reviewed before action. This notice does not promise automatic removal or constitute a legal finding.
 
-## 4. Connection to World Simulator OSM
+## 4. Vzcmusico Music Hub
+
+The Vzcmusico Music Hub at https://vzcmusico.vercel.app/ reads the public `tracks.json` catalogue from this repository and provides in-browser playback. It supports official Spotify and YouTube embeds; it does not extract or download music from third-party services or bypass DRM. Library downloads are gated on explicit per-track rights metadata (`downloadAllowed: true` and a verified/authorized/licensed rights status). The hub does not convert catalogue inclusion into copyright clearance.
+
+## 5. Connection to World Simulator OSM
 
 World Simulator OSM retrieves the public `tracks.json` manifest and MP3 files from this repository for its in-game background music player. The game links to this repository as a music source; that technical integration does not transfer ownership of the music to the game publisher.
 
@@ -44,11 +49,11 @@ World Simulator OSM retrieves the public `tracks.json` manifest and MP3 files fr
 - Manifest: https://raw.githubusercontent.com/zhaxuan92-star/Kho-r-c-/main/tracks.json
 - Game: https://world-simulator-osm.vzcapps.vercel.app
 
-## 5. Software and automation
+## 6. Software and automation
 
 The repository's GitHub Actions workflows and manifest-generation scripts are software automation. Their copyright is separate from the rights in the audio files. No open-source licence is granted to third-party audio by this notice. Any software licence added to this repository applies only to the code and documentation within its stated scope.
 
-## 6. No overclaim
+## 7. No overclaim
 
 This is a publisher-authored notice, not a government-issued copyright registration certificate, trademark registration, company incorporation record, or independent proof of chain of title. Rights are asserted only to the extent they are actually owned or lawfully controlled by the relevant rights holder.
 
