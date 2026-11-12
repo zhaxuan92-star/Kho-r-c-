@@ -3,6 +3,7 @@
 Public MP3 music library connected to **World Simulator OSM**.
 
 ## Official links
+- Vzcmusico Music Hub: https://vzcmusico.vercel.app/
 - World Simulator OSM: https://world-simulator-osm.vzcapps.vercel.app
 - Vzc© Copyright Center: https://vzc-copyright-center.vercel.app/
 - Vzcmusico rights notice: [VZCMUSICO-COPYRIGHT.md](VZCMUSICO-COPYRIGHT.md)
